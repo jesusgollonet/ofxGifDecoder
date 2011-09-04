@@ -12,13 +12,15 @@
 // give it an animated gif and get a frame
 class ofxGifDecoder {
 public:
+    ofxGifDecoder();
     void decode(string fileName);
     vector<ofPixels *> pxs;    
     void putBmpIntoPixels(FIBITMAP * bmp, ofPixels &pix, bool swapForLittleEndian = true);
     void postBmpInfo(FIBITMAP * bmp);
-    RGBQUAD * Palette;
+    int globalPaletteSize;
+    RGBQUAD * globalPalette;
+    vector <ofColor> palette;
 private :
-    
     
 
 };

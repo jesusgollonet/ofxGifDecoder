@@ -3,10 +3,11 @@
 //--------------------------------------------------------------
 void testApp::setup(){
     
-    dcd.decode("iana.gif");
+    dcd.decode("iana/i04.gif");
     for (int i = 0; i < dcd.pxs.size(); i++) {
         decodedImages.push_back(new ofImage(*dcd.pxs[i]));
     }
+    
 }
 
 //--------------------------------------------------------------
@@ -16,12 +17,17 @@ void testApp::update(){
 
 //--------------------------------------------------------------
 void testApp::draw(){
-    ofEnableAlphaBlending();
+    
     ofSetColor(255, 255, 255, 250);
     for(int i = 0; i < decodedImages.size() ; i++) {
-        decodedImages[i]->draw(i*decodedImages[i]->width*.5,0, decodedImages[i]->width*.5, decodedImages[i]->height*.5);
+        decodedImages[i]->draw(i*decodedImages[0]->width*.5,0, decodedImages[0]->width*.5, decodedImages[0]->height*.5);
     }
-    ofDisableAlphaBlending();
+
+    for (int i = 0; i < dcd.palette.size(); i++) {
+        ofSetColor(dcd.palette[i]);
+        ofRect((i%25)*10, decodedImages[0]->height*.5f + (i/25)*10, 10, 10);
+    }
+
 }
 
 //--------------------------------------------------------------

@@ -10,10 +10,13 @@
 //#include "FreeImage.h"
  #define WORD uint16_t
 
-// from ofimage
+ofxGifDecoder::ofxGifDecoder(){
+    globalPalette = NULL;
+    globalPaletteSize = 0;
+}
 //----------------------------------------------------
 void ofxGifDecoder::putBmpIntoPixels(FIBITMAP * bmp, ofPixels &pix, bool swapForLittleEndian ){
- 
+    
 	// some images use a palette, or <8 bpp, so convert them to raster 8-bit channels
 	FIBITMAP* bmpConverted = NULL;
     FITAG *tag;
@@ -21,51 +24,42 @@ void ofxGifDecoder::putBmpIntoPixels(FIBITMAP * bmp, ofPixels &pix, bool swapFor
     // on page 0!!
     if( FreeImage_GetMetadata(FIMD_ANIMATION, bmp, "LogicalWidth", &tag)) {
         WORD logicalWidth = *(WORD *)FreeImage_GetTagValue(tag);
-        printf("logical width %i \n", logicalWidth);
+        //printf("logical width %i \n", logicalWidth);
     }
     
     if( FreeImage_GetMetadata(FIMD_ANIMATION, bmp, "LogicalHeight", &tag)) {
         WORD logicalHeight = *(WORD *)FreeImage_GetTagValue(tag);
-        printf("logical height %i \n", logicalHeight);
+        //printf("logical height %i \n", logicalHeight);
     }
     
     if( FreeImage_GetMetadata(FIMD_ANIMATION, bmp, "FrameLeft", &tag)) {
         WORD frameLeft = *(WORD *)FreeImage_GetTagValue(tag);
-        printf("frameLeft %i \n", frameLeft);
+        //printf("frameLeft %i \n", frameLeft);
     }
     
     if( FreeImage_GetMetadata(FIMD_ANIMATION, bmp, "FrameTop", &tag)) {
         WORD frameTop = *(WORD *)FreeImage_GetTagValue(tag);
-        printf("frameTop %i \n", frameTop);
+        //printf("frameTop %i \n", frameTop);
     }
     
-    RGBQUAD * globalPalette = NULL;
-    int globalPaletteSize = 0;
     if( FreeImage_GetMetadata(FIMD_ANIMATION, bmp, "GlobalPalette", &tag) ) {
         globalPaletteSize = FreeImage_GetTagCount(tag);
         printf("we have a palette of %i colors \n", globalPaletteSize);
         if( globalPaletteSize >= 2 ) {
             globalPalette = (RGBQUAD *)FreeImage_GetTagValue(tag);
             for (int i = 0 ; i < globalPaletteSize; i++) {
-                printf("r %i g %i b %i \n", globalPalette[i].rgbRed, globalPalette[i].rgbGreen, globalPalette[i].rgbBlue);
+                ofColor c;
+                c.set(globalPalette[i].rgbRed, globalPalette[i].rgbGreen, globalPalette[i].rgbBlue);
+                palette.push_back(c);
+                //printf("n %i r %i g %i b %i\n", i, dcd.globalPalette[i].rgbRed, dcd.globalPalette[i].rgbGreen, dcd.globalPalette[i].rgbBlue);
+                //printf("r %i g %i b %i \n", globalPalette[i].rgbRed, globalPalette[i].rgbGreen, globalPalette[i].rgbBlue);
             }
         }
     }
 
     
-    
-    
-    
     if(FreeImage_GetBPP(bmp) == 8) {
-        //printf("we're good\n ");
         bmp = FreeImage_ConvertTo24Bits(bmp);
-        //RGBQUAD *pal = FreeImage_GetPalette(bmp);
-        //ofColor * palette = new ofColor[nColors];
-        for (int i = 0; i < 256; i++) {
-            //printf(" %i ----------------   \n",i );
-            //printf("red  %i green %i blue %i \n",   pal[i].rgbRed,  pal[i].rgbGreen,  pal[i].rgbBlue);            
-        }
-        
     }
     
     

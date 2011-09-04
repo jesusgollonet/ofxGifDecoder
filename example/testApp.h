@@ -25,6 +25,7 @@ class testApp : public ofBaseApp{
     
         ofxGifDecoder dcd;
         vector<ofImage *> decodedImages;
+        vector <ofColor> colors;
 };
 
 #endif
