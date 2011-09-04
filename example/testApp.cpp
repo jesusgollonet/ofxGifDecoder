@@ -7,7 +7,6 @@ void testApp::setup(){
     for (int i = 0; i < dcd.pxs.size(); i++) {
         decodedImages.push_back(new ofImage(*dcd.pxs[i]));
     }
-   
 }
 
 //--------------------------------------------------------------
@@ -17,9 +16,12 @@ void testApp::update(){
 
 //--------------------------------------------------------------
 void testApp::draw(){
+    ofEnableAlphaBlending();
+    ofSetColor(255, 255, 255, 250);
     for(int i = 0; i < decodedImages.size() ; i++) {
-        decodedImages[i]->draw(i*100,0, 100, 100);
+        decodedImages[i]->draw(i*decodedImages[i]->width*.5,0, decodedImages[i]->width*.5, decodedImages[i]->height*.5);
     }
+    ofDisableAlphaBlending();
 }
 
 //--------------------------------------------------------------
