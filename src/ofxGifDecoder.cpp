@@ -14,9 +14,9 @@ ofxGifDecoder::ofxGifDecoder(){
     globalPalette = NULL;
     globalPaletteSize = 0;
 }
+
 //----------------------------------------------------
 void ofxGifDecoder::putBmpIntoPixels(FIBITMAP * bmp, ofPixels &pix, bool swapForLittleEndian ){
-    
 	// some images use a palette, or <8 bpp, so convert them to raster 8-bit channels
 	FIBITMAP* bmpConverted = NULL;
     FITAG *tag;
@@ -89,12 +89,13 @@ void ofxGifDecoder::putBmpIntoPixels(FIBITMAP * bmp, ofPixels &pix, bool swapFor
 	}
 #endif
 }
-void ofxGifDecoder::postBmpInfo(FIBITMAP *bmp){
-    
+void ofxGifDecoder::reset(){
+    pxs.clear();
+    palette.clear();
 }
 
 void ofxGifDecoder::decode(string fileName) {
-    
+    reset();
 	int					width, height, bpp;
 	fileName                    = ofToDataPath(fileName);
 	bool bLoaded                = false;

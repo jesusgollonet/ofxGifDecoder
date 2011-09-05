@@ -14,13 +14,17 @@ class ofxGifDecoder {
 public:
     ofxGifDecoder();
     void decode(string fileName);
+    
+    
     vector<ofPixels *> pxs;    
-    void putBmpIntoPixels(FIBITMAP * bmp, ofPixels &pix, bool swapForLittleEndian = true);
-    void postBmpInfo(FIBITMAP * bmp);
-    int globalPaletteSize;
-    RGBQUAD * globalPalette;
     vector <ofColor> palette;
 private :
+    void reset();
+    void putBmpIntoPixels(FIBITMAP * bmp, ofPixels &pix, bool swapForLittleEndian = true);
+    void postBmpInfo(FIBITMAP * bmp);
+
+    int globalPaletteSize;
+    RGBQUAD * globalPalette;
     
 
 };
