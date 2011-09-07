@@ -11,15 +11,25 @@
 #include "ofMain.h"
 #include "ofxGifFrame.h"
 
+// todo. add loop to setup
+
 class ofxGifFile {
     public:
+    
         ofxGifFile();
         ~ofxGifFile();
-        void setup(int _w, int _h);
-        
+        void setup(int _w, int _h, vector<ofColor> _globalPalette, int _nPages);
+        void addFrame(ofPixels _px, int _left , int _top);
+        vector <ofColor> getPalette();
+        // void numFrames, void isAnimated, void duration
+    
     private:
         vector <ofxGifFrame > gifFrames;
+        vector <ofColor> globalPalette;
         //vector <ofPixels *> rawPixels;
-               int w, h;
-
+        int w, h, nPages;
+        bool bAnimated;    
+        bool bLoop;
+        float duration;
+    
 };

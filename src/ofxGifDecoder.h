@@ -15,7 +15,7 @@
 class ofxGifDecoder {
 public:
     ofxGifDecoder();
-    void decode(string fileName);
+    bool decode(string fileName);
     ofxGifFile getFile();
     
     vector<ofPixels *> pxs;    
@@ -26,11 +26,9 @@ private :
     ofxGifFile  gifFile;
     
     void reset();
-    void createGifFile(FIBITMAP * bmp, ofPixels &pix, bool swapForLittleEndian = true);
-    void processFrame(int _frameNum);
-    void putBmpIntoPixels(FIBITMAP * bmp, ofPixels &pix, bool swapForLittleEndian = true);
-    void postBmpInfo(FIBITMAP * bmp);
-
+    void createGifFile(FIBITMAP * bmp, int _nPages);
+    void processFrame(FIBITMAP * bmp, int _frameNum);
+    
     int globalPaletteSize;
     RGBQUAD * globalPalette;
     

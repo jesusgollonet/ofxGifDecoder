@@ -13,13 +13,19 @@
 class ofxGifFrame{
     
 public:
+    ofxGifFrame();
+    //ofxGifFrame(ofPixels px, int _top, int _left);
+    // eventually localPalette, interlaced, disposal method, duration
+    void setFromPixels(ofPixels px , int _left , int _top);
     
-
 private:
-    
+    int top;
+    int left;
     ofPixels pixels;
-    float duration;
     
+    // optional
+    float duration;
+    // optional
     vector<ofColor> palette;
 
 };

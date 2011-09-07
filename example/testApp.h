@@ -3,7 +3,7 @@
 
 #include "ofMain.h"
 #include "ofxGifDecoder.h"
-
+#include "ofxGifFile.h"
 
 class testApp : public ofBaseApp{
 
@@ -24,6 +24,7 @@ class testApp : public ofBaseApp{
         void exit();
     
         ofxGifDecoder dcd;
+        ofxGifFile  decodedFile;
         vector<ofImage *> decodedImages;
         vector <ofColor> colors;
         vector <ofColor> colors2;
