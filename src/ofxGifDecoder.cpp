@@ -15,23 +15,76 @@ ofxGifDecoder::ofxGifDecoder(){
     globalPaletteSize = 0;
 }
 
+// return a bool if succesful?
+void ofxGifDecoder::decode(string fileName) {
+    reset();
+	int					width, height, bpp;
+	fileName                    = ofToDataPath(fileName);
+	bool bLoaded                = false;
+	FIMULTIBITMAP	* multiBmp  = NULL;
+    
+    
+	FREE_IMAGE_FORMAT fif = FIF_UNKNOWN;
+	fif = FreeImage_GetFileType(fileName.c_str(), 0);
+    
+	if(fif != FIF_GIF) {
+        ofLog(OF_LOG_WARNING, "ofxGifDecoder::decode. this is not a gif file. not processing");
+        return;
+	}
+    
+    multiBmp = FreeImage_OpenMultiBitmap(fif, fileName.c_str(), false, false,true, GIF_LOAD256);
+    
+    if (multiBmp){
+        printf("we have multibitmap\n");
+        bLoaded = true;
+        // num frames
+        int count = FreeImage_GetPageCount(multiBmp);
+        printf("we have count %i frames  \n", count);            
+        // here we process the first frame
+        
+        // and then start counting here from 1 instead of 0
+        for (int i = 0; i < count; i++) {
+            FIBITMAP * dib = FreeImage_LockPage(multiBmp, i);
+            
+            if(dib) {
+                pxs.push_back(new ofPixels());
+                putBmpIntoPixels(dib, *pxs.back(), true);
+                FreeImage_UnlockPage(multiBmp, dib, false);
+            }
+        }
+        FreeImage_CloseMultiBitmap(multiBmp, 0);
+    }else {
+        ofLog(OF_LOG_WARNING, "ofxGifDecoder::decode. there was some error processing.");
+	}    
+}
+
+void ofxGifDecoder::createGifFile(FIBITMAP * bmp, ofPixels &pix, bool swapForLittleEndian ){
+                  
+    FIBITMAP* bmpConverted = NULL;
+    FITAG *tag;
+                 
+    // on page 0!!
+    if( FreeImage_GetMetadata(FIMD_ANIMATION, bmp, "LogicalWidth", &tag)) {
+      WORD logicalWidth = *(WORD *)FreeImage_GetTagValue(tag);
+      //printf("logical width %i \n", logicalWidth);
+    }
+
+    if( FreeImage_GetMetadata(FIMD_ANIMATION, bmp, "LogicalHeight", &tag)) {
+      WORD logicalHeight = *(WORD *)FreeImage_GetTagValue(tag);
+      //printf("logical height %i \n", logicalHeight);
+    }
+
+}
+
+
+
 //----------------------------------------------------
 void ofxGifDecoder::putBmpIntoPixels(FIBITMAP * bmp, ofPixels &pix, bool swapForLittleEndian ){
 	// some images use a palette, or <8 bpp, so convert them to raster 8-bit channels
 	FIBITMAP* bmpConverted = NULL;
     FITAG *tag;
     
-    // on page 0!!
-    if( FreeImage_GetMetadata(FIMD_ANIMATION, bmp, "LogicalWidth", &tag)) {
-        WORD logicalWidth = *(WORD *)FreeImage_GetTagValue(tag);
-        //printf("logical width %i \n", logicalWidth);
-    }
-    
-    if( FreeImage_GetMetadata(FIMD_ANIMATION, bmp, "LogicalHeight", &tag)) {
-        WORD logicalHeight = *(WORD *)FreeImage_GetTagValue(tag);
-        //printf("logical height %i \n", logicalHeight);
-    }
-    
+        
     if( FreeImage_GetMetadata(FIMD_ANIMATION, bmp, "FrameLeft", &tag)) {
         WORD frameLeft = *(WORD *)FreeImage_GetTagValue(tag);
         //printf("frameLeft %i \n", frameLeft);
@@ -89,55 +142,14 @@ void ofxGifDecoder::putBmpIntoPixels(FIBITMAP * bmp, ofPixels &pix, bool swapFor
 	}
 #endif
 }
+
 void ofxGifDecoder::reset(){
     pxs.clear();
     palette.clear();
 }
 
-void ofxGifDecoder::decode(string fileName) {
-    reset();
-	int					width, height, bpp;
-	fileName                    = ofToDataPath(fileName);
-	bool bLoaded                = false;
-	FIMULTIBITMAP	* multiBmp  = NULL;
-    
-    
-	FREE_IMAGE_FORMAT fif = FIF_UNKNOWN;
-	fif = FreeImage_GetFileType(fileName.c_str(), 0);
-	if(fif != FIF_UNKNOWN) {
-		// or guess via filename
-		fif = FreeImage_GetFIFFromFilename(fileName.c_str());
-	}
-	if(fif == FIF_GIF)  {
-        // this will always give 32bpp gifs - see Additional notes (GIF specific) in fi doc p. 123 -!!!
-        // also, apparently I shouldn't be using it.
-		multiBmp = FreeImage_OpenMultiBitmap(fif, fileName.c_str(), false, false,true, GIF_LOAD256);
-        
-		if (multiBmp){
-			bLoaded = true;
-		}
-	}
-	//-----------------------------
-    
-	if ( bLoaded ){
-        int count = FreeImage_GetPageCount(multiBmp);
-        for (int i = 0; i < count; i++) {
-            FIBITMAP * dib = FreeImage_LockPage(multiBmp, i);
 
-            if(dib) {
-                pxs.push_back(new ofPixels());
-                
-                putBmpIntoPixels(dib, *pxs.back(), true);
-                FreeImage_UnlockPage(multiBmp, dib, false);
-            }
-        }
-	} else {
-		width = height = bpp = 0;
-	}
-    
-	if (multiBmp != NULL){
-        FreeImage_CloseMultiBitmap(multiBmp, 0);
-
-	}
-	
+// should I return a pointer of a copy?
+ofxGifFile ofxGifDecoder::getFile() {
+    return gifFile;
 }

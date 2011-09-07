@@ -4,7 +4,7 @@
 void testApp::setup(){
     
     dcd.decode("iwdrm04.gif");
-        dcd.decode("iwdrm02.gif");
+    //dcd.decode("1px.gif");
     colors = dcd.palette;
     for (int i = 0; i < dcd.pxs.size(); i++) {
         decodedImages.push_back(new ofImage(*dcd.pxs[i]));
