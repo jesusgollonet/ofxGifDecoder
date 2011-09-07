@@ -17,12 +17,12 @@ public:
     //ofxGifFrame(ofPixels px, int _top, int _left);
     // eventually localPalette, interlaced, disposal method, duration
     void setFromPixels(ofPixels px , int _left , int _top);
-    
+    void draw(float _x, float _y);
 private:
     int top;
     int left;
     ofPixels pixels;
-    
+    ofTexture tx;
     // optional
     float duration;
     // optional

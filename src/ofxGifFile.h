@@ -22,7 +22,13 @@ class ofxGifFile {
         void addFrame(ofPixels _px, int _left , int _top);
         vector <ofColor> getPalette();
         // void numFrames, void isAnimated, void duration
-    
+        int getNumFrames();
+        ofxGifFrame * getFrameAt(int _index);
+        // void draw
+        // void update
+        // 
+        void draw(float _x, float _y);
+        void drawFrame(float _x, float _y, int _frameNum = 0);
     private:
         vector <ofxGifFrame > gifFrames;
         vector <ofColor> globalPalette;

@@ -4,7 +4,8 @@
 void testApp::setup(){
     
     //dcd.decode("iwdrm04.gif");
-    bool success = dcd.decode("iwdrm02.gif"); 
+    //bool success = dcd.decode("iwdrm02.gif"); 
+    bool success = dcd.decode("iana/i10.gif"); 
     if (success) decodedFile = dcd.getFile();
     //colors = dcd.palette;
     
@@ -20,11 +21,12 @@ void testApp::update(){
 
 //--------------------------------------------------------------
 void testApp::draw(){
-    ofSetColor(255, 255, 255, 250);
+    ofSetColor(255, 255, 255, 255);
 //    for(int i = 0; i < decodedImages.size() ; i++) {
 //        decodedImages[i]->draw(i*decodedImages[0]->width*.5,0, decodedImages[0]->width*.5, decodedImages[0]->height*.5);
 //    }
 //
+    decodedFile.draw(200, 200);
     for (int i = 0; i < decodedFile.getPalette().size(); i++) {
         ofSetColor(decodedFile.getPalette()[i]);
         ofRect((i%25)*10, (i/25)*10, 10, 10);

@@ -18,4 +18,11 @@ void ofxGifFrame::setFromPixels(ofPixels _px, int _left , int _top){
     pixels  = _px;
     top     = _top;
     left    = _left;
+    
+    tx.allocate(pixels.getWidth(), pixels.getHeight(), GL_RGB); // rgb for now
+    tx.loadData(pixels);
+}
+
+void ofxGifFrame::draw(float _x, float _y){
+    tx.draw(_x, _y);
 }

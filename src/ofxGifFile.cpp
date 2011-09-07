@@ -30,6 +30,19 @@ void ofxGifFile::addFrame(ofPixels _px, int _left, int _top){
     gifFrames.push_back(f);
 }
 
+void ofxGifFile::draw(float _x, float _y){
+    gifFrames[0].draw(_x, _y);
+}
+
+int ofxGifFile::getNumFrames() {
+    return gifFrames.size();
+}
+
+ofxGifFrame * ofxGifFile::getFrameAt(int _index) {
+    return &(gifFrames[_index]); //??
+}
+
+
 vector <ofColor> ofxGifFile::getPalette(){
     return globalPalette;
 }
