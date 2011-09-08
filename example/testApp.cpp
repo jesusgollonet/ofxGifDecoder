@@ -5,7 +5,7 @@ void testApp::setup(){
     
     //dcd.decode("iwdrm04.gif");
     //bool success = dcd.decode("iwdrm02.gif"); 
-    bool success = dcd.decode("iana/i10.gif"); 
+    bool success = dcd.decode("iana/i02.gif"); 
     if (success) decodedFile = dcd.getFile();
     //colors = dcd.palette;
     

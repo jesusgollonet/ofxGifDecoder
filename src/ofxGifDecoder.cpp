@@ -128,22 +128,22 @@ void ofxGifDecoder::processFrame(FIBITMAP * bmp, int _frameNum){
     printf("getwidth %i height %i \n", width, height);
 	// ofPixels are top left, FIBITMAP is bottom left
 	FreeImage_FlipVertical(bmp);
-	
+	//pix.swapRgb();
 	unsigned char * bmpBits = FreeImage_GetBits(bmp);
 	if(bmpBits != NULL) {
+        
 		pix.setFromAlignedPixels(bmpBits, width, height, channels, pitch);
+            
+        #ifdef TARGET_LITTLE_ENDIAN
+            pix.swapRgb();
+        #endif
+        
         gifFile.addFrame(pix, frameLeft, frameTop);
 	} else {
 		ofLogError() << "ofImage::putBmpIntoPixels() unable to set ofPixels from FIBITMAP";
 	}
 	
     
-#ifdef TARGET_LITTLE_ENDIAN
-	//if(swapForLittleEndian) {
-		pix.swapRgb();
-	//}
-#endif
-
 }
 
 void ofxGifDecoder::reset(){
