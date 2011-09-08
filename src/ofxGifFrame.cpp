@@ -13,11 +13,11 @@ ofxGifFrame::ofxGifFrame(){
 }
 
 
-void ofxGifFrame::setFromPixels(ofPixels _px, int _left , int _top){
-    printf("px w %i, h %i, left %i, top %i \n", _px.getWidth(), _px.getWidth(), _left, _top);
-    pixels  = _px;
-    top     = _top;
-    left    = _left;
+void ofxGifFrame::setFromPixels(ofPixels _px, int _left , int _top, float _duration){
+    pixels   = _px;
+    top      = _top;
+    left     = _left;
+    duration = _duration;
     
     tx.allocate(pixels.getWidth(), pixels.getHeight(), GL_RGB); // rgb for now
     tx.loadData(pixels);

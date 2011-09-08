@@ -15,8 +15,8 @@ class ofxGifFrame{
 public:
     ofxGifFrame();
     //ofxGifFrame(ofPixels px, int _top, int _left);
-    // eventually localPalette, interlaced, disposal method, duration
-    void setFromPixels(ofPixels px , int _left , int _top);
+    // eventually localPalette, interlaced, disposal method
+    void setFromPixels(ofPixels px , int _left , int _top, float _duration = 0.f);
     void draw(float _x, float _y);
 private:
     int top;

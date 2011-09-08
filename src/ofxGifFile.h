@@ -19,7 +19,7 @@ class ofxGifFile {
         ofxGifFile();
         ~ofxGifFile();
         void setup(int _w, int _h, vector<ofColor> _globalPalette, int _nPages);
-        void addFrame(ofPixels _px, int _left , int _top);
+        void addFrame(ofPixels _px, int _left , int _top, float _duration = 0);
         vector <ofColor> getPalette();
         // void numFrames, void isAnimated, void duration
         int getNumFrames();
@@ -27,8 +27,9 @@ class ofxGifFile {
         // void draw
         // void update
         // 
-        void draw(float _x, float _y);
-        void drawFrame(float _x, float _y, int _frameNum = 0);
+        void draw(float _x, float _y);  
+        void drawFrame(int _frameNum, float _x, float _y);
+        // array operator overload?
     private:
         vector <ofxGifFrame > gifFrames;
         vector <ofColor> globalPalette;
