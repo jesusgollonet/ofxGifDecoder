@@ -92,7 +92,9 @@ void ofxGifDecoder::createGifFile(FIBITMAP * bmp, int _nPages){
 
     RGBQUAD bgColor;
     if(FreeImage_GetBackgroundColor(bmp, &bgColor)){
-       //printf("background color r %i g %i b %i \n", bgColor.rgbRed, bgColor.rgbGreen, bgColor.rgbBlue);
+       //ofColor c;
+       gifFile.setBackgroundColor(ofColor(bgColor.rgbRed, bgColor.rgbGreen, bgColor.rgbBlue));
+       printf("background color r %i g %i b %i \n", bgColor.rgbRed, bgColor.rgbGreen, bgColor.rgbBlue);
     }
     
 }
