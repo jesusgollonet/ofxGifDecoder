@@ -89,6 +89,11 @@ void ofxGifDecoder::createGifFile(FIBITMAP * bmp, int _nPages){
     }
     
     gifFile.setup(logicalWidth, logicalHeight, palette, _nPages);    
+
+    RGBQUAD bgColor;
+    if(FreeImage_GetBackgroundColor(bmp, &bgColor)){
+       //printf("background color r %i g %i b %i \n", bgColor.rgbRed, bgColor.rgbGreen, bgColor.rgbBlue);
+    }
     
 }
 
@@ -126,8 +131,9 @@ void ofxGifDecoder::processFrame(FIBITMAP * bmp, int _frameNum){
 
 	// ofPixels are top left, FIBITMAP is bottom left
 	FreeImage_FlipVertical(bmp);
-	//pix.swapRgb();
+
 	unsigned char * bmpBits = FreeImage_GetBits(bmp);
+    
 	if(bmpBits != NULL) {
         
 		pix.setFromAlignedPixels(bmpBits, width, height, channels, pitch);
@@ -140,11 +146,10 @@ void ofxGifDecoder::processFrame(FIBITMAP * bmp, int _frameNum){
 	} else {
 		ofLogError() << "ofImage::putBmpIntoPixels() unable to set ofPixels from FIBITMAP";
 	}
-	
-    
 }
 
 void ofxGifDecoder::reset(){
+    gifFile.clear();
     pxs.clear();
     palette.clear();
 }

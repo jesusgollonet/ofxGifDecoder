@@ -23,11 +23,13 @@ class testApp : public ofBaseApp{
         void gotMessage(ofMessage msg);
         void exit();
     
-        ofxGifDecoder dcd;
-        ofxGifFile  decodedFile;
-        vector<ofImage *> decodedImages;
-        vector <ofColor> colors;
-        vector <ofColor> colors2;
+        ofxGifDecoder dcd1;
+        ofxGifDecoder dcd2;
+        ofxGifDecoder dcd3;
+        ofxGifFile  gif1;
+        ofxGifFile  gif2;
+        ofxGifFile  gif3;
+ 
 };
 
 #endif

@@ -30,16 +30,29 @@ void ofxGifFile::addFrame(ofPixels _px, int _left, int _top, float _duration){
     gifFrames.push_back(f);
 }
 
+int ofxGifFile::getWidth(){
+    return w;
+}
+
+int ofxGifFile::getHeight(){
+    return h;
+}
+
 void ofxGifFile::draw(float _x, float _y){
     gifFrames[0].draw(_x, _y);
 }
 
 void ofxGifFile::drawFrame(int _frameNum, float _x, float _y){
+    drawFrame(_frameNum, _x, _y, w, h);
+}
+
+void ofxGifFile::drawFrame(int _frameNum, float _x, float _y, int _w, int _h){
     if(_frameNum < 0 || _frameNum >= gifFrames.size()){
         ofLog(OF_LOG_WARNING, "ofxGifFile::drawFrame frame out of bounds. not drawing");
         return;
     }
-    gifFrames[_frameNum].draw(_x, _y);
+//    ofxGifFrame f = gifFrames[_frameNum];
+    gifFrames[_frameNum].draw(_x , _y , _w, _h);
 }
 
 
@@ -56,4 +69,11 @@ ofxGifFrame * ofxGifFile::getFrameAt(int _index) {
 
 vector <ofColor> ofxGifFile::getPalette(){
     return globalPalette;
+}
+
+void ofxGifFile::clear() {
+    
+    printf("clearing gif file\n ");
+    gifFrames.clear();
+    globalPalette.clear();
 }

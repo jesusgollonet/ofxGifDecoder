@@ -23,13 +23,22 @@ class ofxGifFile {
         vector <ofColor> getPalette();
         // void numFrames, void isAnimated, void duration
         int getNumFrames();
+        int getWidth();
+        int getHeight();
+    
         ofxGifFrame * getFrameAt(int _index);
-        // void draw
+    // array operator overload? 
+    // gif[1] is frame 1, and we can treat is as such
+    // gif[1].getTop(); gif[1].draw() ...    
+
         // void update
-        // 
+
         void draw(float _x, float _y);  
-        void drawFrame(int _frameNum, float _x, float _y);
-        // array operator overload?
+        // this should draw with the offsets correctly applied. 
+        void drawFrame(int _frameNum, float _x, float _y); 
+        void drawFrame(int _frameNum, float _x, float _y, int _w, int _h); 
+        void clear();
+        
     private:
         vector <ofxGifFrame > gifFrames;
         vector <ofColor> globalPalette;
