@@ -25,10 +25,7 @@ class testApp : public ofBaseApp{
     
         ofxGifDecoder dcd;
         vector <ofxGifFile> gifs;
-        float sizeMult;
-        vector <ofxGifFrame * > gifFrames;
-        vector <ofImage > gifRawFrames;
- 
+        float sizeMult; 
 };
 
 #endif

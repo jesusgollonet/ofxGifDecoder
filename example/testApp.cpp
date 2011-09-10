@@ -8,7 +8,7 @@ void testApp::setup(){
             gifs.push_back(dcd.getFile());
         }
     }    
-    sizeMult = .2f;
+    sizeMult = .3f;
 }
 
 //--------------------------------------------------------------
@@ -18,17 +18,19 @@ void testApp::update(){
 
 //--------------------------------------------------------------
 void testApp::draw(){
+    float mousePct = (float)mouseY/ofGetWindowHeight();
 
     for (int i = 0; i < gifs.size(); i++) {
-        for (int j = 0; j < gifs[i].getNumFrames(); j++) {
-            ofSetColor(255, 255, 255, 255);
-            gifs[i].drawFrame(
-                              j, 
-                              j * gifs[i].getWidth()  * sizeMult, 
-                              i * gifs[i].getHeight() * sizeMult, 
-                              gifs[i].getWidth()      * sizeMult, 
-                              gifs[i].getHeight()     * sizeMult
-                              );
+        
+        int frameIndex =MIN((int)( mousePct * gifs[i].getNumFrames()-1), gifs[i].getNumFrames()-1);
+        //printf("frameIndex %i \n", frameIndex);        
+        int gifW = gifs[0].getWidth()*sizeMult;
+        int gifH = gifs[i].getHeight()*sizeMult;
+        gifs[i].drawFrame(frameIndex, i * gifW, 0, gifW, gifH);
+        
+        for (int j = 0; j < gifs[i].getPalette().size(); j++) {
+            ofSetColor(gifs[i].getPalette()[j].r, gifs[i].getPalette()[j].g, gifs[i].getPalette()[j].b);
+            ofRect(i * gifW + j%15*10, gifH + j/15*10 , 10, 10);
         }
     }
 }
