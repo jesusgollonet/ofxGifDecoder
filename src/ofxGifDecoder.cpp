@@ -64,8 +64,9 @@ bool ofxGifDecoder::decode(string fileName) {
 }
 
 void ofxGifDecoder::createGifFile(FIBITMAP * bmp, int _nPages){
+
     FITAG *tag;
-    // on page 0!!
+
     int logicalWidth, logicalHeight;
     
     if( FreeImage_GetMetadata(FIMD_ANIMATION, bmp, "LogicalWidth", &tag)) {
@@ -92,19 +93,17 @@ void ofxGifDecoder::createGifFile(FIBITMAP * bmp, int _nPages){
 
     RGBQUAD bgColor;
     if(FreeImage_GetBackgroundColor(bmp, &bgColor)){
-       //ofColor c;
        gifFile.setBackgroundColor(ofColor(bgColor.rgbRed, bgColor.rgbGreen, bgColor.rgbBlue));
-       printf("background color r %i g %i b %i \n", bgColor.rgbRed, bgColor.rgbGreen, bgColor.rgbBlue);
     }
-    
 }
 
 void ofxGifDecoder::processFrame(FIBITMAP * bmp, int _frameNum){
     FITAG *tag;
     ofPixels pix;
 
-    int frameLeft, frameTop;
+    int   frameLeft, frameTop;
     float frameDuration;
+    
     if( FreeImage_GetMetadata(FIMD_ANIMATION, bmp, "FrameLeft", &tag)) {
         frameLeft = *(int *)FreeImage_GetTagValue(tag);
     }
@@ -112,7 +111,6 @@ void ofxGifDecoder::processFrame(FIBITMAP * bmp, int _frameNum){
     if( FreeImage_GetMetadata(FIMD_ANIMATION, bmp, "FrameTop", &tag)) {
         frameTop = *(int *)FreeImage_GetTagValue(tag);
     }
-    
     
     if( FreeImage_GetMetadata(FIMD_ANIMATION, bmp, "FrameTime", &tag)) {
         int frameTime = *(int *)FreeImage_GetTagValue(tag);// centiseconds 1/100 sec

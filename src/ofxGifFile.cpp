@@ -25,40 +25,43 @@ void ofxGifFile::setup(int _w, int _h, vector<ofColor> _globalPalette, int _nPag
 
 // by now we're copying everything (no pointers)
 void ofxGifFile::addFrame(ofPixels _px, int _left, int _top, float _duration){
+        
     ofxGifFrame f;
+
     if(getNumFrames() == 0){
         accumPx = _px; // we assume 1st frame is fully drawn
+        f.setFromPixels(_px , _left, _top, _duration);
     } else {
         // add new pixels to accumPx
         int cropOriginX = _left;
         int cropOriginY = _top;
-        
-        for (int i = 0; i < _px.getWidth() * _px.getHeight(); i++) {
+    
+        // [todo] make this loop only travel through _px, not accumPx
+        for (int i = 0; i < accumPx.getWidth() * accumPx.getHeight(); i++) {
             int x = i % accumPx.getWidth();
             int y = i / accumPx.getWidth();
-            ofColor pxColor = accumPx.getColor(x, y);
-
+            
             if (x >= _left  && x < _left + _px.getWidth()  &&
                 y >= _top   && y < _top  + _px.getHeight()){
                 int cropX = x - cropOriginX;  //   (i - _left) % _px.getWidth();
                 int cropY = y - cropOriginY;
-                int cropI = cropX + cropY * _px.getWidth();
+                //int cropI = cropX + cropY * _px.getWidth();
                 if (_px.getColor(cropX, cropY) != bgColor) {
-                    accumPx.setColor(x, y, _px.getColor(cropX, cropY));
+                    accumPx.setColor(x, y, _px.getColor(cropX, cropY) );
                 }
-
- //               accumPx.getPixels()[i * 3    ] = _px.getPixels()[cropI * 3    ];
-   //             accumPx.getPixels()[i * 3 + 1] = _px.getPixels()[cropI * 3 + 1];
-     //           accumPx.getPixels()[i * 3 + 2] = _px.getPixels()[cropI * 3 + 2];
             } else {
                 
                 
             }
+                    
         }
+     
+        f.setFromGifPixels(accumPx, _px,_left, _top, _duration);    
     }
     
+  
     
-    f.setFromPixels(accumPx , _top, _left, _duration);
+    //
     gifFrames.push_back(f);
 }
 
@@ -111,8 +114,6 @@ vector <ofColor> ofxGifFile::getPalette(){
 }
 
 void ofxGifFile::clear() {
-    
-    printf("clearing gif file\n ");
     gifFrames.clear();
     globalPalette.clear();
 }

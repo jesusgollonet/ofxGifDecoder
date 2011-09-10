@@ -9,18 +9,35 @@
 #include "ofxGifFrame.h"
 
 ofxGifFrame::ofxGifFrame(){
-
+    left = top = 0;
+    duration = 0.f;
 }
 
 
 void ofxGifFrame::setFromPixels(ofPixels _px, int _left , int _top, float _duration){
-    pixels   = _px;
+    //rawPixels = _px;
+    pixels    = _px;
+    left      = _left;
+    top       = _top;
+    duration  = _duration;
+    tx.allocate(pixels.getWidth(), pixels.getHeight(), GL_RGB); // rgb for now
+    tx.loadData(pixels);
+}
+
+void ofxGifFrame::setFromGifPixels(ofPixels _constructedPx, ofPixels _rawPx , int _left , int _top, float _duration){
+    pixels   = _constructedPx;
+    rawPixels = _rawPx;
     left     = _left;
     top      = _top;
     duration = _duration;
     
     tx.allocate(pixels.getWidth(), pixels.getHeight(), GL_RGB); // rgb for now
     tx.loadData(pixels);
+}
+
+ofPixels * ofxGifFrame::getRawPixels(){
+    if(rawPixels.getWidth() > 0 && rawPixels.getHeight() > 0) return &rawPixels;
+    return &pixels;
 }
 
 int ofxGifFrame::getWidth(){

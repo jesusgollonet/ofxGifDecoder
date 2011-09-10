@@ -2,25 +2,13 @@
 
 //--------------------------------------------------------------
 void testApp::setup(){
-    
-    bool success = dcd1.decode("iana/i01.gif"); 
-    if (success) gif1 = dcd1.getFile();
-    
-    success = dcd1.decode("iana/i02.gif");
-    if (success) {
-        gif2 = dcd1.getFile();
-    }
-    
-    success = dcd1.decode("iana/i03.gif");
-    if (success) {
-        gif3 = dcd1.getFile();
-    }
-    
-    
-    printf("gif 1 frames %i \n ", gif1.getNumFrames());
-    printf("gif 2 frames %i \n ", gif2.getNumFrames());
-    printf("gif 3 frames %i \n ", gif3.getNumFrames());
-    ofSetFrameRate(2);
+    for (int i = 1; i < 10; i++) {
+        bool success = dcd.decode("iana/i0"+ofToString(i)+".gif");
+        if (success) {
+            gifs.push_back(dcd.getFile());
+        }
+    }    
+    sizeMult = .2f;
 }
 
 //--------------------------------------------------------------
@@ -30,33 +18,19 @@ void testApp::update(){
 
 //--------------------------------------------------------------
 void testApp::draw(){
-    ofSetColor(255, 255, 255, 255);
-    
-    for(int i = 0; i < gif1.getNumFrames(); i++){
-        gif1.drawFrame(i, i*gif1.getWidth()*.3f, 0, gif1.getWidth()*.3f, gif1.getHeight()*.3f);
-    }
-    for(int i = 0; i < gif2.getNumFrames(); i++){
-        gif2.drawFrame(i, i*gif2.getWidth()*.3f, 200, gif2.getWidth()*.3f, gif2.getHeight()*.3f);
 
+    for (int i = 0; i < gifs.size(); i++) {
+        for (int j = 0; j < gifs[i].getNumFrames(); j++) {
+            ofSetColor(255, 255, 255, 255);
+            gifs[i].drawFrame(
+                              j, 
+                              j * gifs[i].getWidth()  * sizeMult, 
+                              i * gifs[i].getHeight() * sizeMult, 
+                              gifs[i].getWidth()      * sizeMult, 
+                              gifs[i].getHeight()     * sizeMult
+                              );
+        }
     }
-    for(int i = 0; i < gif3.getNumFrames(); i++){
-        gif3.drawFrame(i, i*gif3.getWidth()*.3f, 400, gif3.getWidth()*.3f, gif3.getHeight()*.3f);    
-    }
-    
-//    gif1.drawFrame((int)(floor(ofRandom(gif1.getNumFrames()))), 0, 0);
-//    gif2.drawFrame((int)(floor(ofRandom(gif2.getNumFrames()))), 0, 250);
-//    gif3.drawFrame((int)(floor(ofRandom(gif3.getNumFrames()))), 0, 500);
-//    //    
-    //    for (int i = 0; i < gif1.getPalette().size(); i++) {
-    //        ofSetColor(gif1.getPalette()[i]);
-    //        ofRect((i%25)*10, (i/25)*10, 10, 10);
-    //    }
-    //
-//    for (int i = 0; i < gif2.getPalette().size(); i++) {
-//        ofSetColor(gif2.getPalette()[i]);
-//        ofRect(200 + (i%25)*10, (i/25)*10, 10, 10);
-//    }
-    //
 }
 
 //--------------------------------------------------------------

@@ -44,12 +44,13 @@ class ofxGifFile {
     private:
         ofColor bgColor;
         vector <ofxGifFrame > gifFrames;
+        vector <ofImage> rawFrames;
         vector <ofColor> globalPalette;
         //vector <ofPixels *> rawPixels;
         int w, h, nPages;
         bool bAnimated;    
         bool bLoop;
         float duration;
-    ofPixels accumPx;
+        ofPixels accumPx;
     
 };
