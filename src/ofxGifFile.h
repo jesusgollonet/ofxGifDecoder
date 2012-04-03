@@ -27,7 +27,8 @@ class ofxGifFile {
         int getNumFrames();
         int getWidth();
         int getHeight();
-        float getDuration();    
+        float getDuration();
+		 
     
         ofxGifFrame * getFrameAt(int _index);
     // array operator overload? 
@@ -52,5 +53,5 @@ class ofxGifFile {
         bool bLoop;
         float duration;
         ofPixels accumPx;
-    
+    	float gifDuration;
 };
