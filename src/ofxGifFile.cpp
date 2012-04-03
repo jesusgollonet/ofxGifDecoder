@@ -31,6 +31,7 @@ void ofxGifFile::addFrame(ofPixels _px, int _left, int _top, float _duration){
     if(getNumFrames() == 0){
         accumPx = _px; // we assume 1st frame is fully drawn
         f.setFromPixels(_px , _left, _top, _duration);
+		gifDuration = _duration;
     } else {
         // add new pixels to accumPx
         int cropOriginX = _left;
@@ -71,6 +72,10 @@ int ofxGifFile::getWidth(){
 
 int ofxGifFile::getHeight(){
     return h;
+}
+
+float ofxGifFile::getDuration(){
+    return gifDuration;
 }
 
 void ofxGifFile::draw(float _x, float _y){
