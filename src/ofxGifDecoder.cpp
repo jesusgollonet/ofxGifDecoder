@@ -70,11 +70,11 @@ void ofxGifDecoder::createGifFile(FIBITMAP * bmp, int _nPages){
     int logicalWidth, logicalHeight;
     
     if( FreeImage_GetMetadata(FIMD_ANIMATION, bmp, "LogicalWidth", &tag)) {
-        logicalWidth = *(int *)FreeImage_GetTagValue(tag);
+        logicalWidth = *(unsigned short *)FreeImage_GetTagValue(tag);
     }
     
     if( FreeImage_GetMetadata(FIMD_ANIMATION, bmp, "LogicalHeight", &tag)) {
-        logicalHeight = *(int *)FreeImage_GetTagValue(tag);
+        logicalHeight = *(unsigned short *)FreeImage_GetTagValue(tag);
     }
     
     if( FreeImage_GetMetadata(FIMD_ANIMATION, bmp, "GlobalPalette", &tag) ) {
@@ -101,27 +101,42 @@ void ofxGifDecoder::processFrame(FIBITMAP * bmp, int _frameNum){
     FITAG *tag;
     ofPixels pix;
 
-    int   frameLeft, frameTop;
+    unsigned int   frameLeft, frameTop;
     float frameDuration;
+    GifFrameDisposal disposal_method = GIF_DISPOSAL_BACKGROUND;
     
     if( FreeImage_GetMetadata(FIMD_ANIMATION, bmp, "FrameLeft", &tag)) {
-        frameLeft = *(int *)FreeImage_GetTagValue(tag);
+        frameLeft = *(unsigned short *)FreeImage_GetTagValue(tag);
     }
     
     if( FreeImage_GetMetadata(FIMD_ANIMATION, bmp, "FrameTop", &tag)) {
-        frameTop = *(int *)FreeImage_GetTagValue(tag);
+        frameTop = *(unsigned short *)FreeImage_GetTagValue(tag);
     }
     
     if( FreeImage_GetMetadata(FIMD_ANIMATION, bmp, "FrameTime", &tag)) {
-        int frameTime = *(int *)FreeImage_GetTagValue(tag);// centiseconds 1/100 sec
+        long frameTime = *(long *)FreeImage_GetTagValue(tag);// centiseconds 1/100 sec
         frameDuration =(float)frameTime/1000.f;
     }
     
-    // we do this for drawing. eventually we should be able to draw 8 bits? at least to retain the data
-    if(FreeImage_GetBPP(bmp) == 8) {
-        // maybe we should only do this when asked for rendering?
-        bmp = FreeImage_ConvertTo24Bits(bmp);
+    if( FreeImage_GetMetadata(FIMD_ANIMATION, bmp, "DisposalMethod", &tag)) {
+        disposal_method = (GifFrameDisposal) *(unsigned char *)FreeImage_GetTagValue(tag);
     }
+    
+    // we do this for drawing. eventually we should be able to draw 8 bits? at least to retain the data
+//    if(FreeImage_GetBPP(bmp) == 8) {
+//        // maybe we should only do this when asked for rendering?
+//        bmp = FreeImage_ConvertTo24Bits(bmp);
+//    }
+    
+    FIBITMAP* bmpConverted = NULL;
+	if(FreeImage_GetColorType(bmp) == FIC_PALETTE || FreeImage_GetBPP(bmp) < 8) {
+		if(FreeImage_IsTransparent(bmp)) {
+			bmpConverted = FreeImage_ConvertTo32Bits(bmp);
+		} else {
+			bmpConverted = FreeImage_ConvertTo24Bits(bmp);
+		}
+		bmp = bmpConverted;
+	}
     
 	unsigned int width      = FreeImage_GetWidth(bmp);
 	unsigned int height     = FreeImage_GetHeight(bmp);
@@ -144,7 +159,7 @@ void ofxGifDecoder::processFrame(FIBITMAP * bmp, int _frameNum){
             pix.swapRgb();
         #endif
         
-        gifFile.addFrame(pix, frameLeft, frameTop, frameDuration);
+        gifFile.addFrame(pix, frameLeft, frameTop, disposal_method, frameDuration);
 	} else {
 		ofLogError() << "ofImage::putBmpIntoPixels() unable to set ofPixels from FIBITMAP";
 	}

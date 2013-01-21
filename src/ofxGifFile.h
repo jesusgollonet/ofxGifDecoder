@@ -11,6 +11,13 @@
 #include "ofMain.h"
 #include "ofxGifFrame.h"
 
+enum GifFrameDisposal {
+    GIF_DISPOSAL_UNSPECIFIED,
+    GIF_DISPOSAL_LEAVE,
+    GIF_DISPOSAL_BACKGROUND,
+    GIF_DISPOSAL_PREVIOUS
+};
+
 // todo. add loop to setup
 
 class ofxGifFile {
@@ -21,7 +28,7 @@ class ofxGifFile {
         void setup(int _w, int _h, vector<ofColor> _globalPalette, int _nPages);
         void setBackgroundColor(ofColor _c);
         ofColor getBackgroundColor();
-        void addFrame(ofPixels _px, int _left , int _top, float _duration = 0);
+        void addFrame(ofPixels _px, int _left , int _top, GifFrameDisposal disposal = GIF_DISPOSAL_PREVIOUS, float _duration = 0);
         vector <ofColor> getPalette();
         // void numFrames, void isAnimated, void duration
         int getNumFrames();

@@ -24,7 +24,7 @@ void ofxGifFile::setup(int _w, int _h, vector<ofColor> _globalPalette, int _nPag
 }
 
 // by now we're copying everything (no pointers)
-void ofxGifFile::addFrame(ofPixels _px, int _left, int _top, float _duration){
+void ofxGifFile::addFrame(ofPixels _px, int _left, int _top, GifFrameDisposal disposal, float _duration){
         
     ofxGifFrame f;
 
@@ -47,20 +47,50 @@ void ofxGifFile::addFrame(ofPixels _px, int _left, int _top, float _duration){
                 int cropX = x - cropOriginX;  //   (i - _left) % _px.getWidth();
                 int cropY = y - cropOriginY;
                 //int cropI = cropX + cropY * _px.getWidth();
-                if (_px.getColor(cropX, cropY) != bgColor) {
+                if ( _px.getColor(cropX, cropY).a == 0 ){
+                    switch ( disposal ) {
+                        case GIF_DISPOSAL_BACKGROUND:
+                            _px.setColor(x,y,bgColor);
+                            break;
+                            
+                        case GIF_DISPOSAL_LEAVE:
+                        case GIF_DISPOSAL_UNSPECIFIED:
+                            _px.setColor(x,y,accumPx.getColor(cropX, cropY));
+//                            accumPx.setColor(x,y,_px.getColor(cropX, cropY));
+                            break;
+                            
+                        case GIF_DISPOSAL_PREVIOUS:
+                            _px.setColor(x,y,accumPx.getColor(cropX, cropY));
+                            break;
+                    }
+                } else {
                     accumPx.setColor(x, y, _px.getColor(cropX, cropY) );
                 }
             } else {
-                
-                
+                if ( _px.getColor(x, y) == bgColor ){
+                    switch ( disposal ) {
+                        case GIF_DISPOSAL_BACKGROUND:
+                            accumPx.setColor(x,y,bgColor);
+                            break;
+                            
+                        case GIF_DISPOSAL_UNSPECIFIED:
+                        case GIF_DISPOSAL_LEAVE:
+                            accumPx.setColor(x,y,_px.getColor(x, y));
+                            break;
+                            
+                        case GIF_DISPOSAL_PREVIOUS:
+                            _px.setColor(x,y,accumPx.getColor(x, y));
+                            break;
+                    }
+                } else {
+                    accumPx.setColor(x, y, _px.getColor(x, y) );
+                }
             }
-                    
         }
      
-        f.setFromGifPixels(accumPx, _px,_left, _top, _duration);    
+        f.setFromPixels(_px,_left, _top, _duration);
     }
-    
-  
+    accumPx = _px;
     
     //
     gifFrames.push_back(f);
@@ -83,7 +113,11 @@ void ofxGifFile::draw(float _x, float _y){
 }
 
 void ofxGifFile::drawFrame(int _frameNum, float _x, float _y){
-    drawFrame(_frameNum, _x, _y, w, h);
+    if(_frameNum < 0 || _frameNum >= gifFrames.size()){
+        ofLog(OF_LOG_WARNING, "ofxGifFile::drawFrame frame out of bounds. not drawing");
+        return;
+    }
+    gifFrames[_frameNum].draw(_x , _y , gifFrames[_frameNum].getWidth(), gifFrames[_frameNum].getHeight());
 }
 
 void ofxGifFile::drawFrame(int _frameNum, float _x, float _y, int _w, int _h){
@@ -91,13 +125,13 @@ void ofxGifFile::drawFrame(int _frameNum, float _x, float _y, int _w, int _h){
         ofLog(OF_LOG_WARNING, "ofxGifFile::drawFrame frame out of bounds. not drawing");
         return;
     }
-    ofxGifFrame  f = gifFrames[_frameNum];
-    f.draw(_x , _y , _w, _h);
+    gifFrames[_frameNum].draw(_x , _y , _w, _h);
 }
 
 
 void ofxGifFile::setBackgroundColor(ofColor _c) {
     bgColor = _c;
+    cout<<bgColor<<endl;
 }
 
 ofColor ofxGifFile::getBackgroundColor() {
