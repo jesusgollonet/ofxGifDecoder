@@ -126,7 +126,7 @@ void ofxGifDecoder::processFrame(FIBITMAP * bmp, int _frameNum){
 	unsigned int width      = FreeImage_GetWidth(bmp);
 	unsigned int height     = FreeImage_GetHeight(bmp);
 	unsigned int bpp        = FreeImage_GetBPP(bmp);
-	unsigned int channels   = (bpp / sizeof(PixelType)) / 8;
+	unsigned int channels   = bpp / 8;
 	unsigned int pitch      = FreeImage_GetPitch(bmp);
 
 	// ofPixels are top left, FIBITMAP is bottom left
