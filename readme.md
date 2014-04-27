@@ -1,8 +1,12 @@
 # ofxGifDecoder
-an addon to decode animated gif files in openframeworks. 
+Decode animated gif files in openframeworks. 
+Includes a simple example tested with openframeworks 0.8.1
 
-given a file, it'll process it and allow to draw the gif, draw the frames, get frame duration info, get the gif palette, etc.
+Functionality is still very scarce. You can:
 
-it has basic functionality and it's not fully tested, but it works.
+- draw individual frames, 
+- get frame duration info, 
+- get the gif palette, etc.
 
-both this and ofxGifEncoder will probably be merged soon into ofxGif.
+If you like this, you will probably enjoy [ofxGifEncoder](https://github.com/jesusgollonet/ofxGifEncoder) too.
+They'll end up living together as ofxGif at some point.
