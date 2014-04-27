@@ -8,7 +8,7 @@
 
 #include "ofxGifDecoder.h"
 //#include "FreeImage.h"
- #define WORD uint16_t
+#define DWORD uint32_t
 
 ofxGifDecoder::ofxGifDecoder(){
     globalPalette = NULL;
@@ -48,7 +48,6 @@ bool ofxGifDecoder::decode(string fileName) {
                     createGifFile(dib, nPages);
                     bDecoded = true;   // we have at least 1 frame
                 }
-                
                 processFrame(dib, i);
                 FreeImage_UnlockPage(multiBmp, dib, false);
             } else {
@@ -70,11 +69,13 @@ void ofxGifDecoder::createGifFile(FIBITMAP * bmp, int _nPages){
     int logicalWidth, logicalHeight;
     
     if( FreeImage_GetMetadata(FIMD_ANIMATION, bmp, "LogicalWidth", &tag)) {
-        logicalWidth = *(int *)FreeImage_GetTagValue(tag);
+        unsigned short * lw =  (unsigned short *)FreeImage_GetTagValue(tag);
+        logicalWidth = *lw;
     }
     
     if( FreeImage_GetMetadata(FIMD_ANIMATION, bmp, "LogicalHeight", &tag)) {
-        logicalHeight = *(int *)FreeImage_GetTagValue(tag);
+        unsigned short * lh = (unsigned short *)FreeImage_GetTagValue(tag);
+        logicalHeight = *lh;
     }
     
     if( FreeImage_GetMetadata(FIMD_ANIMATION, bmp, "GlobalPalette", &tag) ) {
@@ -105,16 +106,18 @@ void ofxGifDecoder::processFrame(FIBITMAP * bmp, int _frameNum){
     float frameDuration;
     
     if( FreeImage_GetMetadata(FIMD_ANIMATION, bmp, "FrameLeft", &tag)) {
-        frameLeft = *(int *)FreeImage_GetTagValue(tag);
+        unsigned short * fl =  (unsigned short *)FreeImage_GetTagValue(tag);
+        frameLeft = *fl;
     }
     
     if( FreeImage_GetMetadata(FIMD_ANIMATION, bmp, "FrameTop", &tag)) {
-        frameTop = *(int *)FreeImage_GetTagValue(tag);
+        unsigned short * ft =  (unsigned short *)FreeImage_GetTagValue(tag);
+        frameTop = *ft;
     }
     
     if( FreeImage_GetMetadata(FIMD_ANIMATION, bmp, "FrameTime", &tag)) {
-        int frameTime = *(int *)FreeImage_GetTagValue(tag);// centiseconds 1/100 sec
-        frameDuration =(float)frameTime/1000.f;
+        DWORD * frameTime = (DWORD *) FreeImage_GetTagValue(tag);// centiseconds 1/100 sec
+        frameDuration =(float)(*frameTime)/1000.f;
     }
     
     // we do this for drawing. eventually we should be able to draw 8 bits? at least to retain the data

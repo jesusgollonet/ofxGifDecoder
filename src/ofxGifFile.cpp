@@ -25,7 +25,6 @@ void ofxGifFile::setup(int _w, int _h, vector<ofColor> _globalPalette, int _nPag
 
 // by now we're copying everything (no pointers)
 void ofxGifFile::addFrame(ofPixels _px, int _left, int _top, float _duration){
-        
     ofxGifFrame f;
 
     if(getNumFrames() == 0){
@@ -59,9 +58,6 @@ void ofxGifFile::addFrame(ofPixels _px, int _left, int _top, float _duration){
      
         f.setFromGifPixels(accumPx, _px,_left, _top, _duration);    
     }
-    
-  
-    
     //
     gifFrames.push_back(f);
 }
