@@ -1,5 +1,9 @@
 # ofxGifDecoder
+
 Decode animated gif files in openframeworks. 
+
+![gif palette extraction example](http://ofxgif.jesusgollonet.com/img/gifdecoder.jpg)
+
 Includes a simple example tested with openframeworks 0.8.1
 
 Functionality is still very scarce. You can:
