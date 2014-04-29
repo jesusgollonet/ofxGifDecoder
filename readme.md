@@ -14,3 +14,6 @@ Functionality is still very scarce. You can:
 
 If you like this, you will probably enjoy [ofxGifEncoder](https://github.com/jesusgollonet/ofxGifEncoder) too.
 They'll end up living together as ofxGif at some point.
+
+## THANKS
+props to [robotconscience](https://github.com/robotconscience/ofxGifDecoder) for fixing frame blending and missing PixelType problem
