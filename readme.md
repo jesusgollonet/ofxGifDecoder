@@ -17,3 +17,6 @@ They'll end up living together as ofxGif at some point.
 
 ## THANKS
 props to [robotconscience](https://github.com/robotconscience/ofxGifDecoder) for fixing frame blending and missing PixelType problem
+
+## LICENSE
+This addon is distributed under the [MIT License](https://en.wikipedia.org/wiki/MIT_License) which means you can use it in any context: commercial or non-commercial, public or private, open or closed source.
