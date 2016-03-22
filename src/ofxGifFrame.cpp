@@ -8,58 +8,75 @@
 
 #include "ofxGifFrame.h"
 
-ofxGifFrame::ofxGifFrame(){
-    left = top = 0;
-    duration = 0.f;
+ofxGifFrame::ofxGifFrame()
+    : m_Top(0)
+    , m_Left(0)
+    , m_Pixels()
+    , m_RawPixels()
+    , m_Texture()
+    , m_Duration(0.f)
+{
+
 }
 
+void ofxGifFrame::setFromPixels(const ofPixels &px, int left , int top, float duration)
+{
+    m_Pixels = px;
+    m_Left = left;
+    m_Top = top;
+    m_Duration = duration;
 
-void ofxGifFrame::setFromPixels(ofPixels _px, int _left , int _top, float _duration){
-    //rawPixels = _px;
-    pixels    = _px;
-    left      = _left;
-    top       = _top;
-    duration  = _duration;
-    tx.allocate(pixels.getWidth(), pixels.getHeight(), GL_RGB); // rgb for now
-    tx.loadData(pixels);
+    m_Texture.allocate(m_Pixels.getWidth(), m_Pixels.getHeight(), GL_RGB); // RGB for now
+    m_Texture.loadData(m_Pixels);
 }
 
-void ofxGifFrame::setFromGifPixels(ofPixels _constructedPx, ofPixels _rawPx , int _left , int _top, float _duration){
-    pixels   = _constructedPx;
-    rawPixels = _rawPx;
-    left     = _left;
-    top      = _top;
-    duration = _duration;
-    
-    tx.allocate(pixels.getWidth(), pixels.getHeight(), GL_RGB); // rgb for now
-    tx.loadData(pixels);
+void ofxGifFrame::setFromGifPixels(const ofPixels &constructedPx, const ofPixels &rawPx, int left, int top, float duration)
+{
+    m_Pixels = constructedPx;
+    m_RawPixels = rawPx;
+    m_Left = left;
+    m_Top = top;
+    m_Duration = duration;
+
+    m_Texture.allocate(m_Pixels.getWidth(), m_Pixels.getHeight(), GL_RGB); // RGB for now
+    m_Texture.loadData(m_Pixels);
 }
 
-ofPixels * ofxGifFrame::getRawPixels(){
-    if(rawPixels.getWidth() > 0 && rawPixels.getHeight() > 0) return &rawPixels;
-    return &pixels;
+ofPixels *ofxGifFrame::getRawPixels()
+{
+    if (m_RawPixels.getWidth() > 0 && m_RawPixels.getHeight() > 0) {
+        return &m_RawPixels;
+    }
+
+    return &m_Pixels;
 }
 
-int ofxGifFrame::getWidth(){
-    return pixels.getWidth();
+int ofxGifFrame::getWidth() const
+{
+    return m_Pixels.getWidth();
 }
 
-int ofxGifFrame::getHeight(){
-    return pixels.getHeight();
+int ofxGifFrame::getHeight() const
+{
+    return m_Pixels.getHeight();
 }
 
-int ofxGifFrame::getLeft(){
-    return left;
+int ofxGifFrame::getLeft() const
+{
+    return m_Left;
 }
 
-int ofxGifFrame::getTop(){
-    return top;
+int ofxGifFrame::getTop() const
+{
+    return m_Top;
 }
 
-void ofxGifFrame::draw(float _x, float _y){
-    draw(_x, _y, getWidth(), getHeight());
+void ofxGifFrame::draw(float x, float y) const
+{
+    draw(x, y, getWidth(), getHeight());
 }
 
-void ofxGifFrame::draw(float _x, float _y, int _w, int _h){
-    tx.draw(_x, _y, _w, _h);
+void ofxGifFrame::draw(float x, float y, int w, int h) const
+{
+    m_Texture.draw(x, y, w, h);
 }

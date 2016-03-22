@@ -8,29 +8,25 @@
 #pragma once
 #include "ofMain.h"
 #include "ofxGifFile.h"
-
 #include "FreeImage.h"
 
 // give it an animated gif and get a frame
-class ofxGifDecoder {
+class ofxGifDecoder
+{
 public:
     ofxGifDecoder();
-    bool decode(string fileName);
-    ofxGifFile getFile();
-    
-    vector<ofPixels *> pxs;    
-    vector <ofColor> palette;
-    
-private :
-    
-    ofxGifFile  gifFile;
-    
-    void reset();
-    void createGifFile(FIBITMAP * bmp, int _nPages);
-    void processFrame(FIBITMAP * bmp, int _frameNum);
-    
-    int globalPaletteSize;
-    RGBQUAD * globalPalette;
-    
 
+    ofxGifFile decode(string fileName, bool isUseDataPath = false);
+
+private :
+    int m_GlobalPaletteSize;
+    RGBQUAD *m_GlobalPalette;
+
+    std::vector<ofPixels *> m_Pixels;
+    std::vector<ofColor> m_Palettes;
+
+private:
+    void reset();
+    void createGifFile(FIBITMAP *bmp, const int &pageCount, ofxGifFile &gifFile);
+    void processFrame(FIBITMAP *bmp, ofxGifFile &gifFile);
 };
