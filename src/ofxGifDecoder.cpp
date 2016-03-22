@@ -7,10 +7,16 @@
 //
 
 #include "ofxGifDecoder.h"
+#include "ofMain.h"
 
 ofxGifDecoder::ofxGifDecoder()
     : m_GlobalPaletteSize(0)
     , m_GlobalPalette(nullptr)
+{
+
+}
+
+ofxGifDecoder::~ofxGifDecoder()
 {
 
 }
@@ -29,7 +35,7 @@ ofxGifFile ofxGifDecoder::decode(string fileName, bool isUseDataPath)
     FREE_IMAGE_FORMAT fif = FIF_UNKNOWN;
     fif = FreeImage_GetFileType(fileName.c_str(), 0);
     if (fif != FIF_GIF) {
-        ofLogWarning("ofxGifDecoder") << __FUNCTION__ << ": This is not a gif file. Not processing.";
+        ofLogWarning() << __FUNCTION__ << ": This is not a gif file. Not processing.";
         return gifFile;
     }
 
@@ -40,24 +46,24 @@ ofxGifFile ofxGifDecoder::decode(string fileName, bool isUseDataPath)
 
         // Here we process the first frame
         for (int pageIndex = 0; pageIndex < pageCount; pageIndex++) {
-            FIBITMAP *dib = FreeImage_LockPage(multiBmp, pageIndex);
+            FIBITMAP *currentPage = FreeImage_LockPage(multiBmp, pageIndex);
 
-            if (dib) {
+            if (currentPage) {
                 if (pageIndex == 0) {
-                    createGifFile(dib, pageCount, gifFile);
+                    createGifFile(currentPage, pageCount, gifFile);
                 }
 
-                processFrame(dib, gifFile);
-                FreeImage_UnlockPage(multiBmp, dib, false);
+                processFrame(currentPage, gifFile);
+                FreeImage_UnlockPage(multiBmp, currentPage, false);
             }
             else {
-                ofLogWarning("ofxGifDecoder") << __FUNCTION__ << "Problem locking page.";
+                ofLogWarning() << __FUNCTION__ << "Problem locking page.";
             }
         }
         FreeImage_CloseMultiBitmap(multiBmp, 0);
     }
     else {
-        ofLogWarning("ofxGifDecoder") << __FUNCTION__ << "There was an error processing.";
+        ofLogWarning() << __FUNCTION__ << "There was an error processing.";
     }
 
     return gifFile;
@@ -100,8 +106,6 @@ void ofxGifDecoder::createGifFile(FIBITMAP *bmp, const int &pageCount, ofxGifFil
 void ofxGifDecoder::processFrame(FIBITMAP *bmp, ofxGifFile &gifFile)
 {
     FITAG *tag = nullptr;
-    ofPixels pixels;
-
     unsigned short frameLeft = 0, frameTop = 0;
     float frameDuration = 0.f;
     GifFrameDisposal disposal_method = GIF_DISPOSAL_BACKGROUND;
@@ -123,14 +127,8 @@ void ofxGifDecoder::processFrame(FIBITMAP *bmp, ofxGifFile &gifFile)
         disposal_method = (GifFrameDisposal) * (unsigned char *)FreeImage_GetTagValue(tag);
     }
 
-    // we do this for drawing. eventually we should be able to draw 8 bits? at least to retain the data
-//    if(FreeImage_GetBPP(bmp) == 8) {
-//        // maybe we should only do this when asked for rendering?
-//        bmp = FreeImage_ConvertTo24Bits(bmp);
-//    }
-
-    FIBITMAP *bmpConverted = nullptr;
     if (FreeImage_GetColorType(bmp) == FIC_PALETTE || FreeImage_GetBPP(bmp) < 8) {
+        FIBITMAP *bmpConverted = nullptr;
         if (FreeImage_IsTransparent(bmp)) {
             bmpConverted = FreeImage_ConvertTo32Bits(bmp);
         }
@@ -153,19 +151,19 @@ void ofxGifDecoder::processFrame(FIBITMAP *bmp, ofxGifFile &gifFile)
     const unsigned char *bmpBits = FreeImage_GetBits(bmp);
 
     if (bmpBits != NULL) {
+        ofPixels pixels;
         pixels.setFromAlignedPixels(bmpBits, width, height, channels, pitch);
 #ifdef TARGET_LITTLE_ENDIAN
         pixels.swapRgb();
-#endif
-        gifFile.addFrame(pixels, frameLeft, frameTop, disposal_method, frameDuration);
+#endif //TARGET_LITTLE_ENDIAN
+        gifFile.addFrame(pixels, frameLeft, frameTop, channels, disposal_method, frameDuration);
     }
     else {
-        ofLogError("ofxGifDecoder") << __FUNCTION__ << "Ynable to set ofPixels from FIBITMAP.";
+        ofLogError() << __FUNCTION__ << "Unable to set ofPixels from FIBITMAP.";
     }
 }
 
 void ofxGifDecoder::reset()
 {
-    m_Pixels.clear();
     m_Palettes.clear();
 }

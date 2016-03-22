@@ -6,7 +6,6 @@
 //  Copyright 2011 __MyCompanyName__. All rights reserved.
 //
 #pragma once
-#include "ofMain.h"
 #include "ofxGifFile.h"
 #include "FreeImage.h"
 
@@ -15,6 +14,7 @@ class ofxGifDecoder
 {
 public:
     ofxGifDecoder();
+    ~ofxGifDecoder();
 
     ofxGifFile decode(string fileName, bool isUseDataPath = false);
 
@@ -22,7 +22,6 @@ private :
     int m_GlobalPaletteSize;
     RGBQUAD *m_GlobalPalette;
 
-    std::vector<ofPixels *> m_Pixels;
     std::vector<ofColor> m_Palettes;
 
 private:

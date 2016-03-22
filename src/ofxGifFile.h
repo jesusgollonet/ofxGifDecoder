@@ -7,8 +7,8 @@
 //
 
 #pragma once
-#include "ofMain.h"
 #include "ofxGifFrame.h"
+#include "ofColor.h"
 
 enum GifFrameDisposal {
     GIF_DISPOSAL_UNSPECIFIED,
@@ -30,10 +30,10 @@ public:
     void setBackgroundColor(ofColor color);
     ofColor getBackgroundColor() const;
 
-    void addFrame(ofPixels pixels, const int &left , const int &top, GifFrameDisposal disposal = GIF_DISPOSAL_PREVIOUS, float duration = 0);
-    vector <ofColor> getPalette() const;
+    void addFrame(ofPixels &pixels, const int &left , const int &top, const unsigned int &channels, GifFrameDisposal disposal = GIF_DISPOSAL_PREVIOUS, float duration = 0);
+    const std::vector<ofColor> &getPalette() const;
 
-    int getNumFrames() const;
+    size_t getNumFrames() const;
     int getWidth() const;
     int getHeight() const;
     float getDuration() const;
@@ -42,7 +42,7 @@ public:
 
     void draw(float x, float y);
 
-    // Tis should draw with the offsets correctly applied.
+    // This should draw with the offsets correctly applied.
     void drawFrame(const int &frameNum, const float &x, const float &y);
     void drawFrame(const int &frameNum, const float &x, const float &y, const int &w, const int &h);
     void clear();
@@ -61,6 +61,5 @@ private:
     float m_GifDuration;
 
     std::vector<ofxGifFrame> m_GifFrames;
-    std::vector<ofImage> m_RawFrames;
     std::vector<ofColor> m_GlobalPalette;
 };

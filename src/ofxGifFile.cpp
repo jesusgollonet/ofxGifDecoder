@@ -7,6 +7,7 @@
 //
 
 #include "ofxGifFile.h"
+#include "ofMain.h"
 
 ofxGifFile::ofxGifFile()
     : m_BgColor(ofColor::white)
@@ -35,31 +36,31 @@ void ofxGifFile::setup(int width, int height, const std::vector<ofColor> &global
     m_PageCount = pageCount;
 }
 
-// by now we're copying everything (no pointers)
-void ofxGifFile::addFrame(ofPixels pixels, const int &left, const int &top, GifFrameDisposal disposal, float duration)
+void ofxGifFile::addFrame(ofPixels &pixels, const int &left, const int &top, const unsigned int &channels, GifFrameDisposal disposal, float duration)
 {
     ofxGifFrame frame;
 
     if (getNumFrames() == 0) {
-        m_AccumPixel = pixels; // we assume 1st frame is fully drawn
+        m_AccumPixel = pixels; // We assume 1st frame is fully drawn
         frame.setFromPixels(pixels , left, top, duration);
         m_GifDuration = duration;
     }
     else {
-        // add new pixels to accumPx
+        // Add new pixels to accumPx
         const int cropOriginX = left;
         const int cropOriginY = top;
+        const int pixelsWidth = pixels.getWidth();
+        const int pixelsHeight = pixels.getHeight();
+        const int loopLimit = pixelsWidth * pixelsHeight;
 
-        // [todo] make this loop only travel through _px, not accumPx
-        for (int i = 0; i < m_AccumPixel.getWidth() * m_AccumPixel.getHeight(); i++) {
-            const int x = i % m_AccumPixel.getWidth();
-            const int y = i / m_AccumPixel.getWidth();
+        for (int i = 0; i < loopLimit; i++) {
+            const int x = i % pixelsWidth;
+            const int y = i / pixelsWidth;
 
             if (x >= left  && x < left + pixels.getWidth()  && y >= top   && y < top  + pixels.getHeight()) {
-                const int cropX = x - cropOriginX;  //   (i - _left) % _px.getWidth();
+                const int cropX = x - cropOriginX;
                 const int cropY = y - cropOriginY;
 
-                //int cropI = cropX + cropY * _px.getWidth();
                 if (pixels.getColor(cropX, cropY).a == 0) {
                     switch (disposal) {
                     case GIF_DISPOSAL_BACKGROUND:
@@ -68,7 +69,6 @@ void ofxGifFile::addFrame(ofPixels pixels, const int &left, const int &top, GifF
                     case GIF_DISPOSAL_LEAVE:
                     case GIF_DISPOSAL_UNSPECIFIED:
                         pixels.setColor(x, y, m_AccumPixel.getColor(cropX, cropY));
-//                            accumPx.setColor(x,y,_px.getColor(cropX, cropY));
                         break;
                     case GIF_DISPOSAL_PREVIOUS:
                         pixels.setColor(x, y, m_AccumPixel.getColor(cropX, cropY));
@@ -100,7 +100,7 @@ void ofxGifFile::addFrame(ofPixels pixels, const int &left, const int &top, GifF
             }
         }
 
-        frame.setFromPixels(pixels, left, top, duration);
+        frame.setFromPixels(pixels, left, top, channels, duration);
     }
 
     m_AccumPixel = pixels;
@@ -158,7 +158,7 @@ ofColor ofxGifFile::getBackgroundColor() const
     return m_BgColor;
 }
 
-int ofxGifFile::getNumFrames() const
+std::size_t ofxGifFile::getNumFrames() const
 {
     return m_GifFrames.size();
 }
@@ -168,7 +168,7 @@ ofxGifFrame *ofxGifFile::getFrameAt(int index)
     return &m_GifFrames.at(index);
 }
 
-std::vector<ofColor> ofxGifFile::getPalette() const
+const std::vector<ofColor> &ofxGifFile::getPalette() const
 {
     return m_GlobalPalette;
 }

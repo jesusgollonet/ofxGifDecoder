@@ -7,58 +7,39 @@
 //
 
 #include "ofxGifFrame.h"
+#include "ofMain.h"
 
 ofxGifFrame::ofxGifFrame()
     : m_Top(0)
     , m_Left(0)
-    , m_Pixels()
-    , m_RawPixels()
     , m_Texture()
     , m_Duration(0.f)
 {
 
 }
 
-void ofxGifFrame::setFromPixels(const ofPixels &px, int left , int top, float duration)
+void ofxGifFrame::setFromPixels(const ofPixels &px, int left , int top, const unsigned int &channels, float duration)
 {
-    m_Pixels = px;
     m_Left = left;
     m_Top = top;
     m_Duration = duration;
 
-    m_Texture.allocate(m_Pixels.getWidth(), m_Pixels.getHeight(), GL_RGB); // RGB for now
-    m_Texture.loadData(m_Pixels);
+    m_Texture.loadData(px.getData(), px.getWidth(), px.getHeight(), channels == 3 ? GL_RGB : GL_RGBA);
 }
 
-void ofxGifFrame::setFromGifPixels(const ofPixels &constructedPx, const ofPixels &rawPx, int left, int top, float duration)
+ofTexture *ofxGifFrame::getTexture()
 {
-    m_Pixels = constructedPx;
-    m_RawPixels = rawPx;
-    m_Left = left;
-    m_Top = top;
-    m_Duration = duration;
-
-    m_Texture.allocate(m_Pixels.getWidth(), m_Pixels.getHeight(), GL_RGB); // RGB for now
-    m_Texture.loadData(m_Pixels);
-}
-
-ofPixels *ofxGifFrame::getRawPixels()
-{
-    if (m_RawPixels.getWidth() > 0 && m_RawPixels.getHeight() > 0) {
-        return &m_RawPixels;
-    }
-
-    return &m_Pixels;
+    return &m_Texture;
 }
 
 int ofxGifFrame::getWidth() const
 {
-    return m_Pixels.getWidth();
+    return m_Texture.getWidth();
 }
 
 int ofxGifFrame::getHeight() const
 {
-    return m_Pixels.getHeight();
+    return m_Texture.getHeight();
 }
 
 int ofxGifFrame::getLeft() const
