@@ -43,8 +43,8 @@ public:
     void draw(float x, float y);
 
     // This should draw with the offsets correctly applied.
-    void drawFrame(const int &frameNum, const float &x, const float &y);
-    void drawFrame(const int &frameNum, const float &x, const float &y, const int &w, const int &h);
+    void drawFrame(const int &frameNum, const float &x, const float &y) const;
+    void drawFrame(const int &frameNum, const float &x, const float &y, const int &w, const int &h) const;
     void clear();
 
     bool isValid() const;

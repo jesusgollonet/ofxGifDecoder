@@ -127,7 +127,7 @@ void ofxGifFile::draw(float x, float y)
     m_GifFrames.at(0).draw(x, y);
 }
 
-void ofxGifFile::drawFrame(const int &frameNum, const float &x, const float &y)
+void ofxGifFile::drawFrame(const int &frameNum, const float &x, const float &y) const
 {
     if (frameNum < 0 || frameNum >= m_GifFrames.size()) {
         ofLogWarning("ofxGifFile") << __FUNCTION__ << "Frame out of bounds. not drawing";
@@ -137,7 +137,7 @@ void ofxGifFile::drawFrame(const int &frameNum, const float &x, const float &y)
     m_GifFrames.at(frameNum).draw(x , y , m_GifFrames.at(frameNum).getWidth(), m_GifFrames.at(frameNum).getHeight());
 }
 
-void ofxGifFile::drawFrame(const int &frameNum, const float &x, const float &y, const int &w, const int &h)
+void ofxGifFile::drawFrame(const int &frameNum, const float &x, const float &y, const int &w, const int &h) const
 {
     if (frameNum < 0 || frameNum >= m_GifFrames.size()) {
         ofLogWarning("ofxGifFile") << __FUNCTION__ << "Frame out of bounds. not drawing";
