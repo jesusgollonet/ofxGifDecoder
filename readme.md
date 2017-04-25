@@ -4,6 +4,10 @@ Decode animated gif files in openframeworks.
 
 ![gif palette extraction example](http://ofxgif.jesusgollonet.com/img/gifdecoder.jpg)
 
+## UNMAINTAINED : (
+
+Unfortunately I am not using openframeworks these days and haven't had time to bring my addons up to date with recent versions. I don't have the time to review and test pull requests, so if you have an active fork that's up to date let me know and I'll include the link here.
+
 Includes a simple example tested with openframeworks 0.8.1
 
 Functionality is still very scarce. You can:
